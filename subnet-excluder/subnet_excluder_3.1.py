@@ -1,8 +1,15 @@
 #!/usr/bin/python3
 
+# Import the necessary libraries
 import ipaddress
 import re
 import os
+
+def non_network():
+	print('\n\n----------------------------------------------------')
+	print('  NON-NETWORK ADDRESSES DETECTED! TRY AGAIN!')
+	print('  ' + i + ' is a not a valid network address')
+	print('----------------------------------------------------\n')
 
 os.system('clear')
 print("\n|=====================================================================|")
@@ -29,10 +36,7 @@ while True:
 				blockList.append(net)
 			break
 		except ValueError as ve:
-			print('\n\n----------------------------------------------------')
-			print('  NON-NETWORK ADDRESSES DETECTED! TRY AGAIN!')
-			print('  ' + i + ' is a not a valid network address')
-			print('----------------------------------------------------\n')
+			non_network()
 print('\n')
 
 while True:
@@ -46,10 +50,7 @@ while True:
 				ipaddress.ip_network(i)
 			break
 		except ValueError as ve:
-			print('\n\n----------------------------------------------------')
-			print('  NON-NETWORK ADDRESSES DETECTED! TRY AGAIN!')
-			print('  ' + i + ' is a not a valid network address')
-			print('----------------------------------------------------\n')
+			non_network()
 
 subnetCount = len(subnets)
 
