@@ -54,8 +54,9 @@ else:
 hostname = subprocess.check_output('hostname').decode("utf-8")
 json_headers = {'Content-Type':"application/json"}
 
-api_key ='fGV3QNm16XQQfPjmj2fADwh9vABWNy8rWJnWJmsrFnpsFKFCpZ2g78C3yYVqxZfgNeg4JrwKMaqEjNUT'
-base_url = 'https://garage.stepcglabs.com/admin/scaffolds'
+fqdn = sys.argv[1]
+api_key = sys.argv[2]
+base_url = 'https://' + fqdn + '/admin/scaffolds'
 
 existing_key_id = does_current_hostname_exist(hostname)
 
