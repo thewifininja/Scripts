@@ -54,6 +54,11 @@ else:
 hostname = subprocess.check_output('hostname').decode("utf-8")
 json_headers = {'Content-Type':"application/json"}
 
+if len(sys.argv) != 3:
+	print('\n\n   PLEASE USE THE FOLLOWING FORMAT:')
+	print('     pitracker.py fully.qualified.domain.name api_key\n\n')
+	quit()
+
 fqdn = sys.argv[1]
 api_key = sys.argv[2]
 base_url = 'https://' + fqdn + '/admin/scaffolds'
