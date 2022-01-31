@@ -4,6 +4,7 @@ import subprocess
 import requests
 import json
 import sys
+import re
 
 
 def rxg_get(path):
@@ -34,22 +35,28 @@ def does_current_hostname_exist(hname):
 
 def update_existing_key(key):
 	key_path = '/custom_data_keys/update/' + str(key)
-	key_data_unformatted = {"record":{"value_text":ifconfig}}
+	key_data_unformatted = {"record":{"value_text":inets_lldp}}
 	key_data = json.dumps(key_data_unformatted)
 	response = rxg_put(key_path, key_data)
 	return
 
 def create_new_key():
 	key_path = '/custom_data_keys'
-	new_record_unformatted = {"record":{"name":hostname, "value_text":ifconfig}}
+	new_record_unformatted = {"record":{"name":hostname, "value_text":inets_lldp}}
 	new_record = json.dumps(new_record_unformatted)
 	response = rxg_post(key_path, new_record)
 	return
 
-if 'win32' not in sys.platform:
-	ifconfig = subprocess.check_output('ifconfig').decode("utf-8")
-else:
-	ifconfig = subprocess.check_output('ipconfig').decode("utf-8")
+ifconfig = subprocess.check_output('ifconfig').decode("utf-8")
+iflist = ifconfig.split('\n')
+inets = []
+for i in iflist:
+	if re.search(r"inet (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)", i):
+		inets.append(i)
+inetstring = "\n".join(inets)
+lldp_neighbors = subprocess.run('lldpcli show neighbors', capture_output=True, shell=True).stdout.decode()
+inets_lldp = inetstring + '\n' + lldp_neighbors
+
 
 hostname = subprocess.check_output('hostname').decode("utf-8")
 json_headers = {'Content-Type':"application/json"}
