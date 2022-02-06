@@ -1,4 +1,2 @@
-hostname,location,lat,lng,location_id
-10.59.255.11,"143 1ST ST SE, MASSILLON, Ohio 44646",40.4562048,-81.4043594,1
-10.253.53.11,"145 N Main St, North Canton, OH 44720",40.7293288,-81.1034062,2
-10.253.10.11,"1701 Mahoning Rd NE, Canton, OH 44705",40.7517499,-81.3856788,3
+hostname,location,lat,long
+198.18.0.14,"RivercenterTest2",39.0903633,-84.5104709
