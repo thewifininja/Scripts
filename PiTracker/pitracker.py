@@ -54,7 +54,7 @@ for i in iflist:
 	if re.search(r"inet (?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)", i):
 		inets.append(i)
 inetstring = "\n".join(inets)
-lldp_neighbors = subprocess.run('lldpcli show neighbors', capture_output=True, shell=True).stdout.decode()
+lldp_neighbors = subprocess.run('sudo lldpcli show neighbors', capture_output=True, shell=True).stdout.decode()
 inets_lldp = inetstring + '\n' + lldp_neighbors
 
 
