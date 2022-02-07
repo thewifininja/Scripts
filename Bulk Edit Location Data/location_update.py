@@ -48,9 +48,21 @@ request_headers = {"Content-Type": "application/json",
 csv_file = open(csv_input, mode='r')
 csv_reader = csv.DictReader(csv_file)
 
+print("\n|=====================================================================|")
+print("                      Welcome to Location Updater!")
+print("|=====================================================================|\n")
+
+
 for row in csv_reader:
-    loc_data = {"location":row['location'], "lat":row['lat'], "lng":row['long']}
+    parsed_location = row['location'] + ' [' + row['lat'] + ',' + row['long'] +']'
+    loc_data = {"location":parsed_location, "lat":row['lat'], "lng":row['long']}
     loc_id = find_or_create_a_location(loc_data)
-    update_request = {"field": "location_id", "data": loc_id}
+    update_request = {"field": ["location_id","override_sysLocation"], "data": [loc_id,1]}
     device_update(row['hostname'], update_request)
+    print('  ID: ' + str(loc_id) + '    ' + row['hostname'] + ' Updated with Location: ' + parsed_location)
+
+print('')
+print("|=====================================================================|")
+print("                                    Copyright STEP CG LLC 2022")
+print("|=====================================================================|\n\n")
 quit()
