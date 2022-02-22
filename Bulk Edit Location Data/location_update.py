@@ -43,7 +43,6 @@ request_headers = {"Content-Type": "application/json",
                    "Connection": "keep-alive"
                    }
 
-
 # Read CSV file
 csv_file = open(csv_input, mode='r')
 csv_reader = csv.DictReader(csv_file)
@@ -51,7 +50,6 @@ csv_reader = csv.DictReader(csv_file)
 print("\n|=====================================================================|")
 print("                      Welcome to Location Updater!")
 print("|=====================================================================|\n")
-
 
 for row in csv_reader:
     parsed_location = row['location'] + ' [' + row['lat'] + ',' + row['long'] +']'
