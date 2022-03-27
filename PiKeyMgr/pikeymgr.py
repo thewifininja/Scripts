@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import subprocess
 import requests
 import json
 import sys
@@ -53,6 +52,7 @@ for i in current_keys:
 	keyfile.seek(0)
 	if (i in keyfile.read()):
 		print("Key Exists")
+		print(i)
 	else:
 		keyfile.write("\n" + i)
 
