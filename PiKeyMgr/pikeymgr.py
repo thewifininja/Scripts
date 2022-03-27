@@ -6,7 +6,7 @@ import json
 import sys
 
 # Put your keyfile path, and desired admin roles here:
-keyfile_path = "/Users/nkarrick/.ssh/authorized_keys"
+keyfile_path = "/home/pi/.ssh/authorized_keys"
 admin_roles_to_import = [
 	"Super User"
 ]
