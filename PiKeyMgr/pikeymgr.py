@@ -5,7 +5,7 @@ import json
 import sys
 
 # Put your keyfile path, and desired admin roles here:
-keyfile_path = "/home/pi/.ssh/authorized_keys"
+keyfile_path = "/Users/nkarrick/.ssh/authorized_keys"
 admin_roles_to_import = [
 	"Super User"
 ]
@@ -31,7 +31,10 @@ if len(sys.argv) != 3:
 fqdn = sys.argv[1]
 api_key = sys.argv[2]
 base_url = 'https://' + fqdn + '/admin/scaffolds'
+
 current_keys = []
+keys_added = 0
+keys_skipped = 0
 
 admin_roles = get_admin_roles()
 admin_role_ids = []
@@ -46,14 +49,18 @@ for i in current_key_pair_data:
 	if i['admin']['admin_role_id'] in admin_role_ids:
 		current_keys.append(i["public_key"])
 
+keys_from_api = len(current_keys)
+
 keyfile = open(keyfile_path, "a+")
 
 for i in current_keys:
 	keyfile.seek(0)
 	if (i in keyfile.read()):
-		print("Key Exists")
-		print(i)
+		keys_skipped += 1
 	else:
 		keyfile.write("\n" + i)
+		keys_added += 1
 
 keyfile.close()
+
+print("\n   Keys from API: " + str(keys_from_api) +"\n   Keys Added:    " + str(keys_added) + "\n   Keys Skipped:  " + str(keys_skipped) + "\n")
