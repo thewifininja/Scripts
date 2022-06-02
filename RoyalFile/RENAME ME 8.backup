@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RTSZDocument>
+  <RoyalDocument>
+    <ID>137e9799-b145-4273-8d17-c7c7561a3eac</ID>
+    <Modified>06/02/2022 19:33:04.310</Modified>
+    <ModifiedBy>nkarrick</ModifiedBy>
+    <Name>Testing1</Name>
+    <Created>06/02/2022 19:32:45.492</Created>
+    <CreatedBy>nkarrick</CreatedBy>
+    <PositionNr>0</PositionNr>
+    <IsExpanded>True</IsExpanded>
+    <AutoMergeOption>1</AutoMergeOption>
+    <AutoSaveAfterChange>True</AutoSaveAfterChange>
+    <AutoSaveOnClose>True</AutoSaveOnClose>
+    <ColorFromParent>False</ColorFromParent>
+    <DocumentType>Workspace</DocumentType>
+    <LockdownFeaturesInUse>{}</LockdownFeaturesInUse>
+    <PasswordHash>5DA6DFA33F149E9208E8B6064729EFA7C3B09CB2E3E7C12AB6CEE93121580D53200E13BEFF0EBA66F22942CCEBE814680C1878E62809006A1A5987705B7E2B5E7BBB60F5FB8C63E920DDED2929BF25630D537C9498FE1876D2D9918DB258EB54D9F4EA4766AAF180D44DF8EC3190EF86EF0DC7390D8C09CCE6BE192783123362</PasswordHash>
+    <SaveOption>2</SaveOption>
+    <StoreFavoritesInUserConfig>True</StoreFavoritesInUserConfig>
+    <StoreFolderExpandStateInUserConfig>True</StoreFolderExpandStateInUserConfig>
+    <Description />
+    <ColorName />
+    <Color />
+    <DeletedObjectHistory />
+  </RoyalDocument>
+  <RoyalTrash>
+    <ID>e2846f9b-8c37-49a9-bf97-e8adf2f6df12</ID>
+    <Name>Trashcan</Name>
+    <Modified>06/02/2022 19:32:26.727</Modified>
+    <Created>06/02/2022 19:32:26.727</Created>
+    <ModifiedBy>nkarrick</ModifiedBy>
+    <CreatedBy>nkarrick</CreatedBy>
+    <PositionNr>2</PositionNr>
+    <IsExpanded>False</IsExpanded>
+    <ParentID>137e9799-b145-4273-8d17-c7c7561a3eac</ParentID>
+  </RoyalTrash>
+</RTSZDocument>
