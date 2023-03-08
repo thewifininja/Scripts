@@ -41,7 +41,7 @@ def printOut(file):
 			print(" ", i + (' '* (28-len(i))), attempts + (' '* (10-len(attempts))), answers + (' '* (10-len(answers))), round(average, 3))
 
 		print("\n|===============================================================|")
-		print("   Copyright STEP CG LLC 2021")
+		print("   Copyright TheWiFiNinja 2021")
 		print("|===============================================================|")
 		print("\n")
 		

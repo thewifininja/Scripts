@@ -77,6 +77,6 @@ for i in hosts:
 	#print("   hosthash:", hostshash)
 
 	print("\n|===============================================================|")
-	print("                                    Copyright STEP CG LLC 2021")
+	print("                                    Copyright TheWiFiNinja 2021")
 	print("|===============================================================|")
 	print("\n")

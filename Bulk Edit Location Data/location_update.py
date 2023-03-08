@@ -61,6 +61,6 @@ for row in csv_reader:
 
 print('')
 print("|=====================================================================|")
-print("                                    Copyright STEP CG LLC 2022")
+print("                                    Copyright TheWiFiNinja 2022")
 print("|=====================================================================|\n\n")
 quit()
