@@ -1,63 +1,67 @@
-#!/usr/bin/python3
+#!/opt/homebrew/bin/python3
 
-import os
-import platform
 import subprocess
-import sys
+import os
+import time
+import multiprocessing
 
-def newping(host):
-	with open(os.devnull, "wb") as limbo:
-		result=subprocess.Popen(["ping", "-c", "1", "-n", "-W", "1", host],
-			stdout=limbo, stderr=limbo).wait()
-		if result == 0:
-			return 1
-		else:
-			return 0
-
-def printOut():
-	for j in range(1,10000):
-		for i in hosts:
-			testping = newping(i)
-			hostshash[i].append(testping)
-		os.system('clear')
-		print("\n")
-		print("|===============================================================|")
-		print("                      Welcome to nelliePing!")
-		print("|===============================================================|\n")
-		print("  Host                      Attempts   Answers     Average")
-		print("  ----                      --------   -------     -------")
-		for i in hosts:
-			attempts = str(len(hostshash[i]))
-			answers = str(hostshash[i].count(1))
-			average = sum(hostshash[i]) / int(attempts)
-			print(" ", i + (' '* (28-len(i))), attempts + (' '* (10-len(attempts))), answers + (' '* (10-len(answers))), round(average, 3))
-
-		print("\n|===============================================================|")
-		print("   Copyright TheWiFiNinja 2021")
-		print("|===============================================================|")
-		print("\n")
-		
-
-hosts = [ ]
-
-# hosts = [
-# 	'8.8.8.8',
-# 	'8.1.4.2',
-# 	'8.8.4.4',
-# 	'10.103.2.144'
-# ]
-# 
-hostshash = {}
-
-with open(sys.argv[1]) as filename:
-	for line in filename:
-		hosts.append(line.strip())
+# Read in a list of IPs/FQDNs from ips.txt
+with open('ips.txt', 'r') as file:
+    ips = [line.strip() for line in file]
 
 
-for i in hosts:
-	hostshash[i] = []
+def ping(ip, history):
+    # Ping the current IP address
+    ping_result = ''
+    ping_process = subprocess.Popen(['ping', '-c', '1','-W', '.5', ip], stdout=subprocess.PIPE)
+    output, error = ping_process.communicate()
 
-# print(hostshash)
-printOut()
+    if '1 packets received' in str(output):
+        history.append(1)
+    else:
+        history.append(0)
 
 
+if __name__ ==  '__main__':
+
+    ping_history = {}
+    manager = multiprocessing.Manager()
+
+    for ip in ips:
+        ping_history[ip] = manager.list()
+
+    #ping_history = {ip: multiprocessing.Manager() for ip in ips}  # Initialize a dictionary to store the ping history for each IP
+
+    while True:
+        # Spawn a new process for each IP address in the list
+        processes = [multiprocessing.Process(target=ping, args=(ip,ping_history[ip])) for ip in ips]
+
+        # Start all the processes
+        for process in processes:
+            process.start()
+
+        # Wait for all the processes to finish
+        for process in processes:
+            process.join()
+
+        # Clear the screen
+        os.system('clear')
+
+        print("|==============================================================================================================================|")
+        print("                                                  Welcome to nelliePing v3.0!")
+        print("|==============================================================================================================================|")
+        print("             History: 60 Pings\n")
+
+        for ip in ips:
+            if len(ping_history[ip]) > 60:
+                ping_history[ip].pop(0)
+            # Print the ping history for the current IP address
+            print(f'\t{ip:<50} [{"".join(["X" if x == 1 else "." for x in ping_history[ip]])}]'.replace(' ', '-'))
+
+        print("\n|==============================================================================================================================|")
+        print("                                                                                                Copyright @TheWiFiNinja 2023")
+        print("|==============================================================================================================================|")
+        print("\n")
+
+        # Wait for 1 second before pinging again
+        #time.sleep(1)
