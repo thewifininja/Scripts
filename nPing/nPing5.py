@@ -108,7 +108,7 @@ async def main():
                 print(f' {ip[0:39]:<42} [{ip_history}]{change_spacing} {last_change_index}')
             if ip6s:
                 print('\n IPv6 Link-Local Addresses Currently Not Supported\n')
-            print(' ' * (terminal_size.columns - 40),"Copyright @TheWiFiNinja 2023")
+            print(' ' * (terminal_size.columns - 31),"Copyright @TheWiFiNinja 2023")
             print("\u2514" + ('\u2500' * (terminal_size.columns - 2)) + "\u2518")
             print("\n")
 
