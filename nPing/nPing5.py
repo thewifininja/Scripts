@@ -20,7 +20,7 @@ async def ping(host):
 
 # method for pinging an ipv6 host
 async def ping6(host):
-    proc = await asyncio.create_subprocess_shell(f"ping6 -c 1 -i .5 -I en4 {host}",
+    proc = await asyncio.create_subprocess_shell(f"ping6 -c 1 -i .5 {host}",
                                                  stdout=asyncio.subprocess.PIPE,
                                                  stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await proc.communicate()
@@ -106,8 +106,9 @@ async def main():
                 change_spacing = ' '*((terminal_size.columns - 58)-len(ip_history))
                 # Print the ping history for the current IP address
                 print(f' {ip[0:39]:<42} [{ip_history}]{change_spacing} {last_change_index}')
-
-            print('\n',' ' * (terminal_size.columns - 40),"Copyright @TheWiFiNinja 2023")
+            if ip6s:
+                print('\n IPv6 Link-Local Addresses Currently Not Supported\n')
+            print(' ' * (terminal_size.columns - 40),"Copyright @TheWiFiNinja 2023")
             print("\u2514" + ('\u2500' * (terminal_size.columns - 2)) + "\u2518")
             print("\n")
 
