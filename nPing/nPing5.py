@@ -7,8 +7,27 @@ import shutil
 import ipaddress
 
 # Read in a list of IPs/FQDNs from ips.txt
-with open('ips.txt', 'r') as file:
-    ips = [line.strip() for line in file]
+try:
+    with open('ips.txt', 'r') as file:
+        ips = [line.strip() for line in file]
+except:
+    print('\n Thank you for your interest in nelliePing!\n')
+    print(' To get started, create a file in the same directory as this script')
+    print(' named \'ips.txt\'')
+    print(' The file should contain one host per line, and supports ipv4 and ipv6')
+    print(' addresses. FQDNs are also supported, but limited to ipv4 currently.')
+    print(' An example file might look like:\n')
+    print('-----------------------------------')
+    print('  8.8.8.8')
+    print('  10.255.10.1')
+    print('  10.84.0.1')
+    print('  10.103.255.1')
+    print('  10.84.0.235')
+    print('  10.84.3.25')
+    print('  fe80::1076:71bc:5657:bbaa')
+    print('-----------------------------------\n')
+    print('    GOOD LUCK!\n\n')
+    quit()
 
 # method for pinging an ipv4 host
 async def ping(host):
@@ -59,6 +78,11 @@ async def main():
             ip6s.append(ip)
         else:
             ip4s.append(ip)
+    # detect if there are any ipv6 link local addresses
+    link_locals = []
+    for host in ip6s:
+        if ipaddress.ip_address(host).is_link_local:
+            link_locals.append(host)
 
     # forever loop until KeyboardInterrupt is caught
     while True:
@@ -97,7 +121,7 @@ async def main():
             print("\u250C" + ('\u2500' * (terminal_size.columns - 2)) + "\u2510")
             print(' ' * int((terminal_size.columns / 2) -13), "Welcome to nelliePing v5.9!")
             print(' ' * (terminal_size.columns -13)," Last")
-            print(" Host:",' ' * (terminal_size.columns - 19),"Change")
+            print(" Host:",' ' * (terminal_size.columns - 19), "Change")
             print( '\u255e' + '\u2550' * (terminal_size.columns -13) + "\u256a" + ('\u2550' * 10) + '\u2561')
 
             for ip in ips:
@@ -106,8 +130,10 @@ async def main():
                 change_spacing = ' '*((terminal_size.columns - 58)-len(ip_history))
                 # Print the ping history for the current IP address
                 print(f' {ip[0:39]:<42} [{ip_history}]{change_spacing} {last_change_index}')
-            if ip6s:
+            if link_locals:
                 print('\n IPv6 Link-Local Addresses Currently Not Supported\n')
+            else:
+                print('\n')
             print(' ' * (terminal_size.columns - 31),"Copyright @TheWiFiNinja 2023")
             print("\u2514" + ('\u2500' * (terminal_size.columns - 2)) + "\u2518")
             print("\n")
@@ -115,6 +141,6 @@ async def main():
 # execute the program, with ability to capture 'ctrl-c' from user to exit gracefully
 if __name__ ==  '__main__':
     try:
-        asyncio.run(main())
+            asyncio.run(main())
     except KeyboardInterrupt:
         print("\n\n  Thank you for using nelliePing!\n\n")
