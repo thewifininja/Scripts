@@ -27,7 +27,9 @@ except:
     print('  fe80::1076:71bc:5657:bbaa')
     print('-----------------------------------\n')
     print('    GOOD LUCK!\n\n')
-    quit()
+    ips = "".join(input('  You can input comma separated IPs here this time: ').split()).split(',')
+    if not ips:
+        quit()
 
 # method for pinging an ipv4 host
 async def ping(host):
