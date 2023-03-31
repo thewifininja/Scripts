@@ -86,6 +86,10 @@ async def main():
 
     # forever loop until KeyboardInterrupt is caught
     while True:
+        # look to see if there are any ping failures in the last round of pinging. if not introduce
+        # a 1 second delay before pinging again. This prevents ICMP DDoS. If there are ping failures
+        # the ping() function has a built in wait of 1 second, so the sleep is not needed or you get
+        # a 2 second ping interval
         ping_fails = 0
         for ip in ips:
             if ping_history[ip]:
