@@ -31,7 +31,7 @@ except:
 
 # method for pinging an ipv4 host
 async def ping(host):
-    proc = await asyncio.create_subprocess_shell(f"ping -c 1 -W .5 {host}",
+    proc = await asyncio.create_subprocess_shell(f"ping -c 1 -W 1 {host}",
                                                  stdout=asyncio.subprocess.PIPE,
                                                  stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await proc.communicate()
@@ -39,7 +39,7 @@ async def ping(host):
 
 # method for pinging an ipv6 host
 async def ping6(host):
-    proc = await asyncio.create_subprocess_shell(f"ping6 -c 1 -i .5 {host}",
+    proc = await asyncio.create_subprocess_shell(f"ping6 -c 1 -i 1 {host}",
                                                  stdout=asyncio.subprocess.PIPE,
                                                  stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await proc.communicate()
@@ -86,10 +86,14 @@ async def main():
 
     # forever loop until KeyboardInterrupt is caught
     while True:
-        if len(ips) == 1:
+        ping_fails = 0
+        for ip in ips:
+            if ping_history[ip]:
+                if ping_history[ip][-1] == 0:
+                    ping_fails +=1
+
+        if ping_fails == 0:
             time.sleep(1)
-        else:
-            time.sleep(.5)
         
         # create a blank results/tasks array. Go through every host in ip4s and ip6s and add to
         # the tasks array. Then trigger the tasks, putting the results into  the results array
