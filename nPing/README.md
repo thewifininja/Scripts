@@ -4,7 +4,7 @@
 ---
 nPing is a python script designed provide the end user with a graphical interface for ICMP, while pinging multiple hosts simultaneously. The script will automatically adjust to your terminal width, with a minimum 59 columns needed for output. 
 
-##How to use
+## How to use
 ---
 make the script executable. `chmod +x nping.py`
 ```
