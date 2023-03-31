@@ -125,13 +125,16 @@ async def main():
             print( '\u255e' + '\u2550' * (terminal_size.columns -13) + "\u256a" + ('\u2550' * 10) + '\u2561')
 
             for ip in ips:
-                last_change_index = find_last_change(ping_history[ip])
-                ip_history = "".join(['\u2588' if x == 1 else "\u25E6" for x in ping_history[ip][-(terminal_size.columns-58):]])
-                change_spacing = ' '*((terminal_size.columns - 58)-len(ip_history))
-                # Print the ping history for the current IP address
-                print(f' {ip[0:39]:<42} [{ip_history}]{change_spacing} {last_change_index}')
+                if ip in link_locals:
+                    print(f' {ip[0:39]:<42} [\u2573]')
+                else:
+                    last_change_index = find_last_change(ping_history[ip])
+                    ip_history = "".join(['\u2588' if x == 1 else "\u25E6" for x in ping_history[ip][-(terminal_size.columns-58):]])
+                    change_spacing = ' '*((terminal_size.columns - 58)-len(ip_history))
+                    # Print the ping history for the current IP address
+                    print(f' {ip[0:39]:<42} [{ip_history}]{change_spacing} {last_change_index}')
             if link_locals:
-                print('\n IPv6 Link-Local Addresses Currently Not Supported\n')
+                print('\n \u2573 - IPv6 Link-Local Addresses Currently Not Supported\n')
             else:
                 print('\n')
             print(' ' * (terminal_size.columns - 31),"Copyright @TheWiFiNinja 2023")
