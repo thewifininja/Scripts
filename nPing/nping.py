@@ -87,7 +87,9 @@ async def main():
     # forever loop until KeyboardInterrupt is caught
     while True:
         if len(ips) == 1:
-            time.sleep(.1)
+            time.sleep(1)
+        else:
+            time.sleep(.5)
         
         # create a blank results/tasks array. Go through every host in ip4s and ip6s and add to
         # the tasks array. Then trigger the tasks, putting the results into  the results array
