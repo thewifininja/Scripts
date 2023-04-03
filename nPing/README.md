@@ -6,7 +6,8 @@ nPing is a python script designed provide the end user with a graphical interfac
 
 ## How to use
 
-make the script executable. `chmod +x nping.py`
+Make the script executable. `chmod +x nping.py`
+Execute the script by: 
 ```
 ./nping.py
 ```
