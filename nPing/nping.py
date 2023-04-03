@@ -11,6 +11,7 @@ try:
     with open('ips.txt', 'r') as file:
         ips = [line.strip() for line in file]
 except:
+    os.system('clear')
     print('\n Thank you for your interest in nelliePing!\n')
     print(' To get started, create a file in the same directory as this script')
     print(' named \'ips.txt\'')
