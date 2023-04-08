@@ -8,29 +8,33 @@ import ipaddress
 
 # Read in a list of IPs/FQDNs from ips.txt
 try:
-    with open('ips.txt', 'r') as file:
-        ips = [line.strip() for line in file]
-except:
-    ips = []
-    while len(ips) < 1 or ips == ['']:
-        os.system('clear')
-        print('\n Thank you for your interest in nelliePing!\n')
-        print(' To get started, create a file in the same directory as this script')
-        print(' named \'ips.txt\'')
-        print(' The file should contain one host per line, and supports ipv4 and ipv6')
-        print(' addresses. FQDNs are also supported, but limited to ipv4 currently.')
-        print(' An example file might look like:\n')
-        print('-----------------------------------')
-        print('  8.8.8.8')
-        print('  10.255.10.1')
-        print('  10.84.0.1')
-        print('  10.103.255.1')
-        print('  10.84.0.235')
-        print('  10.84.3.25')
-        print('  fe80::1076:71bc:5657:bbaa')
-        print('-----------------------------------\n')
-        print('    GOOD LUCK!\n\n')
-        ips = "".join(input('  You can input comma separated IPs here this time: ').split()).split(',')
+    try:
+        with open('ips.txt', 'r') as file:
+            ips = [line.strip() for line in file]
+    except:
+        ips = []
+        while len(ips) < 1 or ips == ['']:
+            os.system('clear')
+            print('\n Thank you for your interest in nelliePing!\n')
+            print(' To get started, create a file in the same directory as this script')
+            print(' named \'ips.txt\'')
+            print(' The file should contain one host per line, and supports ipv4 and ipv6')
+            print(' addresses. FQDNs are also supported, but limited to ipv4 currently.')
+            print(' An example file might look like:\n')
+            print('-----------------------------------')
+            print('  8.8.8.8')
+            print('  10.255.10.1')
+            print('  10.84.0.1')
+            print('  10.103.255.1')
+            print('  10.84.0.235')
+            print('  10.84.3.25')
+            print('  fe80::1076:71bc:5657:bbaa')
+            print('-----------------------------------\n')
+            print('    GOOD LUCK!\n\n')
+            ips = "".join(input('  You can input comma separated IPs here this time: ').split()).split(',')
+except KeyboardInterrupt:
+    print("\n\n  Thank you for using nelliePing!\n\n")
+    quit()
 
 # method for pinging an ipv4 host
 async def ping(host):
@@ -163,3 +167,4 @@ if __name__ ==  '__main__':
             asyncio.run(main())
     except KeyboardInterrupt:
         print("\n\n  Thank you for using nelliePing!\n\n")
+        quit()
