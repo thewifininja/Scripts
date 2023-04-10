@@ -13,25 +13,27 @@ try:
             ips = [line.strip() for line in file]
     except:
         ips = []
+        
+        os.system('clear')
+        print('\n Thank you for your interest in nelliePing!\n')
+        print(' To get started, create a file in the same directory as this script')
+        print(' named \'ips.txt\'')
+        print(' The file should contain one host per line, and supports ipv4 and ipv6')
+        print(' addresses. FQDNs are also supported, but limited to ipv4 currently.')
+        print(' An example file might look like:\n')
+        print('-----------------------------------')
+        print('  8.8.8.8')
+        print('  10.255.10.1')
+        print('  10.84.0.1')
+        print('  10.103.255.1')
+        print('  10.84.0.235')
+        print('  10.84.3.25')
+        print('  fe80::1076:71bc:5657:bbaa')
+        print('-----------------------------------\n')
+        print('    GOOD LUCK!\n')
         while len(ips) < 1 or ips == ['']:
-            os.system('clear')
-            print('\n Thank you for your interest in nelliePing!\n')
-            print(' To get started, create a file in the same directory as this script')
-            print(' named \'ips.txt\'')
-            print(' The file should contain one host per line, and supports ipv4 and ipv6')
-            print(' addresses. FQDNs are also supported, but limited to ipv4 currently.')
-            print(' An example file might look like:\n')
-            print('-----------------------------------')
-            print('  8.8.8.8')
-            print('  10.255.10.1')
-            print('  10.84.0.1')
-            print('  10.103.255.1')
-            print('  10.84.0.235')
-            print('  10.84.3.25')
-            print('  fe80::1076:71bc:5657:bbaa')
-            print('-----------------------------------\n')
-            print('    GOOD LUCK!\n\n')
-            ips = "".join(input('  You can input comma separated IPs here this time: ').split()).split(',')
+            print('\n  For convenience you can Enter IPs below, or press \'ctrl-c\' to quit')
+            ips = "".join(input('  Comma separated IPs here: ').split()).split(',')
 except KeyboardInterrupt:
     print("\n\n  Thank you for using nelliePing!\n\n")
     quit()
@@ -91,6 +93,9 @@ async def main():
         if ipaddress.ip_address(host).is_link_local:
             link_locals.append(host)
 
+    # creat counter for total Ping Count
+    total_ping_count = 0
+
 
     # forever loop until KeyboardInterrupt is caught
     while True:
@@ -127,6 +132,10 @@ async def main():
             else:
                 ping_history[this_host].append(0)
 
+        # increment total ping count
+        total_ping_count += 1
+
+
         # Clear the screen
         os.system('clear')
         terminal_size = shutil.get_terminal_size((80, 24))
@@ -139,11 +148,13 @@ async def main():
             print("\u2514" + ('\u2500' * (terminal_size.columns - 2)) + "\u2518")
         else:
             print("\u250C" + ('\u2500' * (terminal_size.columns - 2)) + "\u2510")
-            print(' ' * int((terminal_size.columns / 2) -13), "Welcome to nelliePing v5.9!")
+            print(' ' * int((terminal_size.columns / 2) -13), "Welcome to nelliePing v6.1!\n")
+            print(' Total Pings:      ' + str(total_ping_count))
+            print(' Pings Displayed:  ' + str(terminal_size.columns - 58))
             print(' ' * (terminal_size.columns -13)," Last")
             print(" Host:",' ' * (terminal_size.columns - 19), "Change")
             print( '\u255e' + '\u2550' * (terminal_size.columns -13) + "\u256a" + ('\u2550' * 10) + '\u2561')
-
+ 
             for ip in ips:
                 if ip in link_locals:
                     print(f' {ip[0:39]:<42} [\u2573]')
