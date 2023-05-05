@@ -1,42 +1,56 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
+import argparse
 import asyncio
 import os
 import time
 import shutil
 import ipaddress
 
+DEFAULT_FILE = 'ips.txt'
+
+def help():
+    print('\n Thank you for your interest in nelliePing!\n')
+    print(' If found, this script will use a file in the same directory')
+    print(' named \'ips.txt\'')
+    print(' The file should contain one host per line, and supports ipv4 and ipv6')
+    print(' addresses. FQDNs are also supported, but limited to ipv4 currently.')
+    print(' An example file might look like:\n')
+    print('-----------------------------------')
+    print('  8.8.8.8')
+    print('  10.255.10.1')
+    print('  10.84.0.1')
+    print('  10.103.255.1')
+    print('  10.84.0.235')
+    print('  10.84.3.25')
+    print('  fe80::1076:71bc:5657:bbaa')
+    print('-----------------------------------\n')
+    print('\n CLI parameters are also supported: \n')
+    print(' -h, --help  Prints this help message.')
+    print(' -p, --path  Accepts a path to a file to use other than ips.txt')
+    print(' -i, --ips   Accepts comma-separated IPs to use in lieu of a text file.')
+    print('\n    GOOD LUCK!\n')
+
 # Read in a list of IPs/FQDNs from ips.txt
-try:
+def load_file(file_path):
+    if file_path is None:
+        file_path = DEFAULT_FILE
     try:
-        with open('ips.txt', 'r') as file:
-            ips = [line.strip() for line in file]
-    except:
-        ips = []
-        
-        os.system('clear')
-        print('\n Thank you for your interest in nelliePing!\n')
-        print(' To get started, create a file in the same directory as this script')
-        print(' named \'ips.txt\'')
-        print(' The file should contain one host per line, and supports ipv4 and ipv6')
-        print(' addresses. FQDNs are also supported, but limited to ipv4 currently.')
-        print(' An example file might look like:\n')
-        print('-----------------------------------')
-        print('  8.8.8.8')
-        print('  10.255.10.1')
-        print('  10.84.0.1')
-        print('  10.103.255.1')
-        print('  10.84.0.235')
-        print('  10.84.3.25')
-        print('  fe80::1076:71bc:5657:bbaa')
-        print('-----------------------------------\n')
-        print('    GOOD LUCK!\n')
-        while len(ips) < 1 or ips == ['']:
-            print('\n  For convenience you can Enter IPs below, or press \'ctrl-c\' to quit')
-            ips = "".join(input('  Comma separated IPs here: ').split()).split(',')
-except KeyboardInterrupt:
-    print("\n\n  Thank you for using nelliePing!\n\n")
-    quit()
+        try:
+            with open(file_path, 'r') as file:
+                ips = [line.strip() for line in file]
+        except:
+            ips = []
+
+            os.system('clear')
+            help()
+            while len(ips) < 1 or ips == ['']:
+                print('\n  For convenience you can Enter IPs below, or press \'ctrl-c\' to quit')
+                ips = "".join(input('  Comma separated IPs here: ').split()).split(',')
+        return ips
+    except KeyboardInterrupt:
+        print("\n\n  Thank you for using nelliePing!\n\n")
+        quit()
 
 # method for pinging an ipv4 host
 async def ping(host):
@@ -62,7 +76,20 @@ def is_valid_ipv6_address(address):
     except ipaddress.AddressValueError:
         return False
 
-async def main():
+async def main(args):
+    if args.get('help'):
+       help()
+       quit()
+
+    ips = []
+    if args.get('ips'):
+        ips = [i.strip() for i in args['ips'].split(',')]
+    else:
+        ips = load_file(args.get('path'))
+
+    if not ips:
+        print('Failed to receive any IP addresses!')
+        quit()
 
     # method for counting backwards in an array to find the last change
     # example [0, 0, 0, 0, 0, 1, 1, 1,] the last change was '4' appends ago
@@ -111,7 +138,7 @@ async def main():
 
         if ping_fails == 0:
             time.sleep(1)
-        
+
         # create a blank results/tasks array. Go through every host in ip4s and ip6s and add to
         # the tasks array. Then trigger the tasks, putting the results into  the results array
         results = []
@@ -148,13 +175,13 @@ async def main():
             print("\u2514" + ('\u2500' * (terminal_size.columns - 2)) + "\u2518")
         else:
             print("\u250C" + ('\u2500' * (terminal_size.columns - 2)) + "\u2510")
-            print(' ' * int((terminal_size.columns / 2) -13), "Welcome to nelliePing v6.1!\n")
+            print(' ' * int((terminal_size.columns / 2) -13), "Welcome to nelliePing v6.2!\n")
             print(' Total Pings:      ' + str(total_ping_count))
             print(' Pings Displayed:  ' + str(terminal_size.columns - 58))
             print(' ' * (terminal_size.columns -13)," Last")
             print(" Host:",' ' * (terminal_size.columns - 19), "Change")
             print( '\u255e' + '\u2550' * (terminal_size.columns -13) + "\u256a" + ('\u2550' * 10) + '\u2561')
- 
+
             for ip in ips:
                 if ip in link_locals:
                     print(f' {ip[0:39]:<42} [\u2573]')
@@ -174,8 +201,20 @@ async def main():
 
 # execute the program, with ability to capture 'ctrl-c' from user to exit gracefully
 if __name__ ==  '__main__':
+    arg_parser = argparse.ArgumentParser(add_help=False)
+    arg_parser.add_argument('-h', '--help',
+                            action='store_true',
+                            required=False)
+    arg_parser.add_argument('-p', '--path',
+                            action='store',
+                            required=False)
+    arg_parser.add_argument('-i', '--ips',
+                            action='store',
+                            required=False)
+    arg_dict = vars(arg_parser.parse_args())
     try:
-            asyncio.run(main())
+        asyncio.run(main(arg_dict))
     except KeyboardInterrupt:
         print("\n\n  Thank you for using nelliePing!\n\n")
         quit()
+
