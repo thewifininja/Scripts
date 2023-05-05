@@ -8,6 +8,7 @@ import shutil
 import ipaddress
 
 DEFAULT_FILE = 'ips.txt'
+DEFAULT_FREQ = 1
 
 def help():
     print('\n Thank you for your interest in nelliePing!\n')
@@ -29,6 +30,7 @@ def help():
     print(' -h, --help  Prints this help message.')
     print(' -p, --path  Accepts a path to a file to use other than ips.txt')
     print(' -i, --ips   Accepts comma-separated IPs to use in lieu of a text file.')
+    print(' -f, --freq  Integer for frequency of pings.')
     print('\n    GOOD LUCK!\n')
 
 # Read in a list of IPs/FQDNs from ips.txt
@@ -76,6 +78,20 @@ def is_valid_ipv6_address(address):
     except ipaddress.AddressValueError:
         return False
 
+def get_frequency(args):
+    freq = DEFAULT_FREQ
+    freq_error = f'Frequency value of \'{args["freq"]}\' is invalid. Using '
+    freq_error += f'default of {DEFAULT_FREQ}.'
+    if args.get('freq'):
+        try:
+            freq = int(args['freq'])
+        except ValueError:
+            print(freq_error)
+        if freq <= 0:
+            print(freq_error)
+            freq = DEFAULT_FREQ
+    return freq
+
 async def main(args):
     if args.get('help'):
        help()
@@ -90,6 +106,8 @@ async def main(args):
     if not ips:
         print('Failed to receive any IP addresses!')
         quit()
+
+    freq = get_frequency(args)
 
     # method for counting backwards in an array to find the last change
     # example [0, 0, 0, 0, 0, 1, 1, 1,] the last change was '4' appends ago
@@ -137,7 +155,7 @@ async def main(args):
                     ping_fails +=1
 
         if ping_fails == 0:
-            time.sleep(1)
+            time.sleep(freq)
 
         # create a blank results/tasks array. Go through every host in ip4s and ip6s and add to
         # the tasks array. Then trigger the tasks, putting the results into  the results array
@@ -209,6 +227,9 @@ if __name__ ==  '__main__':
                             action='store',
                             required=False)
     arg_parser.add_argument('-i', '--ips',
+                            action='store',
+                            required=False)
+    arg_parser.add_argument('-f', '--freq',
                             action='store',
                             required=False)
     arg_dict = vars(arg_parser.parse_args())
