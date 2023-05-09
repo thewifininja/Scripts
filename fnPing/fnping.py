@@ -3,12 +3,41 @@
 import argparse
 import asyncio
 import os
+import re
 import time
 import shutil
+import socket
 import ipaddress
 
 DEFAULT_FILE = 'ips.txt'
 DEFAULT_FREQ = 1
+
+def validate_input(ip_input):
+    """
+    Removes invalid input from the IP/domain list.
+    """
+    cleaned = []
+    ipv4_regex = re.compile(r"(?<![-\.\d])(?:0{0,2}?[0-9]\.|1\d?\d?\.|2[0-5]?[0-5]?\.){3}(?:0{0,2}?[0-9]|1\d?\d?|2[0-5]?[0-5]?)(?![\.\d])")
+    ipv6_regex = re.compile(r"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))")
+    for item in ip_input:
+        if ipv4_regex.findall(item):
+            cleaned.append(item)
+            continue
+        if ipv6_regex.findall(item):
+            cleaned.append(item)
+            continue
+
+        # Attempt to resolve the hostname if it isn't an IPv4 or IPv6 address.
+        try:
+            socket.getaddrinfo(item, 80)
+            cleaned.append(item)
+            continue
+        except socket.gaierror:
+            pass
+
+        print(f"Skipping invalid entry: {item}")
+
+    return cleaned
 
 def help():
     print('\n Thank you for your interest in fnPing!\n')
@@ -102,6 +131,8 @@ async def main(args):
         ips = [i.strip() for i in args['ips'].split(',')]
     else:
         ips = load_file(args.get('path'))
+
+    ips = validate_input(ips)
 
     if not ips:
         print('Failed to receive any IP addresses!')
