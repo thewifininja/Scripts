@@ -11,7 +11,7 @@ DEFAULT_FILE = 'ips.txt'
 DEFAULT_FREQ = 1
 
 def help():
-    print('\n Thank you for your interest in nelliePing!\n')
+    print('\n Thank you for your interest in fnPing!\n')
     print(' If found, this script will use a file in the same directory')
     print(' named \'ips.txt\'')
     print(' The file should contain one host per line, and supports ipv4 and ipv6')
@@ -51,7 +51,7 @@ def load_file(file_path):
                 ips = "".join(input('  Comma separated IPs here: ').split()).split(',')
         return ips
     except KeyboardInterrupt:
-        print("\n\n  Thank you for using nelliePing!\n\n")
+        print("\n\n  Thank you for using fnPing!\n\n")
         quit()
 
 # method for pinging an ipv4 host
@@ -193,7 +193,7 @@ async def main(args):
             print("\u2514" + ('\u2500' * (terminal_size.columns - 2)) + "\u2518")
         else:
             print("\u250C" + ('\u2500' * (terminal_size.columns - 2)) + "\u2510")
-            print(' ' * int((terminal_size.columns / 2) -13), "Welcome to nelliePing v6.2!\n")
+            print(' ' * int((terminal_size.columns / 2) -13), "Welcome to fnPing v8!\n")
             print(' Total Pings:      ' + str(total_ping_count))
             print(' Pings Displayed:  ' + str(terminal_size.columns - 58))
             print(' ' * (terminal_size.columns -13)," Last")
@@ -236,6 +236,6 @@ if __name__ ==  '__main__':
     try:
         asyncio.run(main(arg_dict))
     except KeyboardInterrupt:
-        print("\n\n  Thank you for using nelliePing!\n\n")
+        print("\n\n  Thank you for using fnPing!\n\n")
         quit()
 
