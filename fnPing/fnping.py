@@ -213,10 +213,13 @@ async def main(args):
                 ping_history[this_host].append(0)
 
         # If we have a non-zero non_resolvables, then we need to introduce a sleep. This will need to account for
-        # the ping_fails variable, in order to not introduce multiple sleeps. 
+        # the ping_fails variable, in order to not introduce multiple sleeps. Must also account for link_locals being
+        # present to insert a sleep.  
         if non_resolvables != 0:
             time.sleep(freq)
         elif ping_fails == 0:
+            time.sleep(freq)
+        elif link_locals:
             time.sleep(freq)
 
         # increment total ping count
