@@ -60,7 +60,7 @@ async def ping(host):
                                                  stdout=asyncio.subprocess.PIPE,
                                                  stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await proc.communicate()
-    return host, proc.returncode == 0
+    return host, proc.returncode
 
 # method for pinging an ipv6 host
 async def ping6(host):
@@ -68,7 +68,7 @@ async def ping6(host):
                                                  stdout=asyncio.subprocess.PIPE,
                                                  stderr=asyncio.subprocess.PIPE)
     stdout, stderr = await proc.communicate()
-    return host, proc.returncode == 0
+    return host, proc.returncode
 
 # method for determining if an address is ipv6 or not. Needed for separation of IPs in main function
 def is_valid_ipv6_address(address):
@@ -154,8 +154,6 @@ async def main(args):
                 if ping_history[ip][-1] == 0:
                     ping_fails +=1
 
-        if ping_fails == 0:
-            time.sleep(freq)
 
         # create a blank results/tasks array. Go through every host in ip4s and ip6s and add to
         # the tasks array. Then trigger the tasks, putting the results into  the results array
@@ -168,14 +166,27 @@ async def main(args):
         results = await asyncio.gather(*tasks)
 
         # iterate through results, and sort the ping fails from ping successes, and update the
-        # corresponding dicitonary mapping for that host in ping_history
+        # corresponding dicitonary mapping for that host in ping_history. Also create a non_resolvables
+        # variable set to 0 initially. If we recieve process exit code 68, then increment this counter
+        non_resolvables = 0
+
         for result in results:
             this_host = result[0]
             this_result = result[1]
-            if this_result:
+            if this_result == 0:
                 ping_history[this_host].append(1)
+            elif this_result == 68:
+                ping_history[this_host].append(0)
+                non_resolvables +=1
             else:
                 ping_history[this_host].append(0)
+
+        # If we have a non-zero non_resolvables, then we need to introduce a sleep. This will need to account for
+        # the ping_fails variable, in order to not introduce multiple sleeps. 
+        if non_resolvables != 0:
+            time.sleep(freq)
+        elif ping_fails == 0:
+            time.sleep(freq)
 
         # increment total ping count
         total_ping_count += 1
