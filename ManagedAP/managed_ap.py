@@ -7,7 +7,8 @@ def get_user_input():
     hostname = input("Enter hostname: ")
     admin_port = input("Enter admin port: ")
     api_key = input("Enter API key: ")
-    return hostname, admin_port, api_key
+    outfile = input("Enter output filename: ")
+    return hostname, admin_port, api_key, outfile
 
 def fetch_api_data(hostname, admin_port, api_key):
     url = f"https://{hostname}:{admin_port}/api/v2/monitor/wifi/managed_ap"
@@ -20,7 +21,7 @@ def fetch_api_data(hostname, admin_port, api_key):
         print(f"Error fetching data: {e}")
         return None
 
-def save_to_csv(data, filename="wifi_data.csv"):
+def save_to_csv(data, filename):
     if "results" not in data:
         print("Invalid data format.")
         return
@@ -36,10 +37,10 @@ def save_to_csv(data, filename="wifi_data.csv"):
     print(f"Data saved to {filename}")
 
 def main():
-    hostname, admin_port, api_key = get_user_input()
+    hostname, admin_port, api_key, outfile = get_user_input()
     data = fetch_api_data(hostname, admin_port, api_key)
     if data:
-        save_to_csv(data)
+        save_to_csv(data,outfile)
 
 if __name__ == "__main__":
     main()
